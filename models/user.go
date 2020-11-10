@@ -1,39 +1,34 @@
 package models
 
+import (
+	"log"
 
-
-type UserStore interface{
-	CreateUser(name string) (error)
-	ReadUser(id int) (int, error)
-	UpdateUser(User) (int, error)
-	DeleteUser(name string) (int, error)
-}
-
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
+)
 
 type User struct {
+	gorm.Model
 	Name string `json:"name"`
 	Age int `json:"age"`
-	Employment string `json:"employment"`
+	Email string `gorm:"type:varchar(100);unique_index" json:"email"`
+	Password string
 }
 
-func(u *User)CreateUser(newUser User)(error){
-	u.Name = newUser.Name
-	u.Age = newUser.Age
-	u.Employment = newUser.Employment
+func (u *User) CreateUser() (error){
 
+	pass,err :=bcrypt.GenerateFromPassword([]byte(u.Password),bcrypt.DefaultCost)
+	
+	if err != nil {
+		log.Fatalf("Erro ao gerar hash de senha: %v",err)
+		return err
+	}
 
 	
+	u.Password = string(pass)
+
 	return nil
+
 }
 
-func(u *User)ReadUser(id int)(int,error){
-	return 1,nil
-}
 
-func(u *User)UpdateUser(newUser User)(int,error){
-	return 1,nil
-}
-
-func(u *User)DeleteUser()(int,error){
-	return 1,nil
-}

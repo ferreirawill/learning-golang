@@ -35,20 +35,20 @@ func TestPost(t *testing.T)  {
 	s.initalizeRoutes()
 	s.initDatabase()
 	
-	u := models.User{Name: "william",Age:20,Employment: "Developer"}
-	userMarshal,_ := json.Marshal(u)
-	request,_ := http.NewRequest(http.MethodPost,fmt.Sprintf("/user"),bytes.NewBuffer(userMarshal))
+	p := models.Person{Name: "william",Age:20,Document: "12321231"}
+	personMarshal,_ := json.Marshal(p)
+	request,_ := http.NewRequest(http.MethodPost,fmt.Sprintf("/user"),bytes.NewBuffer(personMarshal))
 	response := httptest.NewRecorder()
 	
 	s.ServeHTTP(response,request)
 	
-	newU := models.User{}
+	newU := models.Person{}
 	jsonBytes,_ := ioutil.ReadAll(response.Body)
 	json.Unmarshal(jsonBytes,&newU)
 
 	fmt.Println(newU)
-	if u != newU{
-		t.Errorf("Valor recebido diferente do esperado| Recebido: %v  Esperado: %v",newU,u)
+	if p.Name != newU.Name{
+		t.Errorf("Valor recebido diferente do esperado| Recebido: %v  Esperado: %v",newU.Name,p.Name)
 	}
 	
 }
@@ -60,20 +60,20 @@ func TestPut(t *testing.T)  {
 	s.initalizeRoutes()
 	s.initDatabase()
 	
-	u := models.User{Name: "william",Age:20,Employment: "Developer"}
-	userMarshal,_ := json.Marshal(u)
-	request,_ := http.NewRequest(http.MethodPost,fmt.Sprintf("/user"),bytes.NewBuffer(userMarshal))
+	p := models.Person{Name: "william",Age:20,Document: "12321231"}
+	personMarshal,_ := json.Marshal(p)
+	request,_ := http.NewRequest(http.MethodPost,fmt.Sprintf("/user"),bytes.NewBuffer(personMarshal))
 	response := httptest.NewRecorder()
 	
 	s.ServeHTTP(response,request)
 	
-	newU := models.User{}
+	newU := models.Person{}
 	jsonBytes,_ := ioutil.ReadAll(response.Body)
 	json.Unmarshal(jsonBytes,&newU)
 
 	fmt.Println(newU)
-	if u != newU{
-		t.Errorf("Valor recebido diferente do esperado| Recebido: %v  Esperado: %v",newU,u)
+	if p.Name != newU.Name{
+		t.Errorf("Valor recebido diferente do esperado| Recebido: %v  Esperado: %v",newU.Name,p.Name)
 	}
 	
 }

@@ -52,7 +52,7 @@ func (s *Server)handleUsers(w http.ResponseWriter,r *http.Request){
 			json.Unmarshal(body,&p)
 			p.Create(s.DB)
 			w.Header().Set("Content-Type","application/json")
-			jsonBody,_ := json.Marshal(u)
+			jsonBody,_ := json.Marshal(p)
 			fmt.Fprint(w,bytes.NewBuffer(jsonBody))
 		
 		
