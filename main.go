@@ -11,6 +11,7 @@ func main(){
 
 	server.initalizeRoutes()
 	server.initDatabase()
+	server.initRedis()
 	
 	
 	if err := http.ListenAndServe(":5000",server); err != nil {

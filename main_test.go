@@ -12,6 +12,51 @@ import (
 	"gitlab.com/Ferreira.will/ormapi/models"
 )
 
+
+
+func TestLogin(t *testing.T) {
+
+	s := Server{}
+
+	s.initalizeRoutes()
+	s.initDatabase()
+	s.initRedis()
+
+
+	t.Run("Assert Method Fail", func(t *testing.T){
+	request,_ := http.NewRequest(http.MethodGet,fmt.Sprintf("/login"),nil)
+	response := httptest.NewRecorder()
+
+	s.ServeHTTP(response,request)
+
+	if response.Code != http.StatusMethodNotAllowed{
+		t.Errorf("Wrong response | Got: %v  , Want: %v",response.Code,http.StatusMethodNotAllowed)
+	}
+	})
+
+	
+	t.Run("Assert Post Login", func(t *testing.T){
+		u := models.User{Username:"admin@admin.com.br",Password: "admin"}
+		userMarshal,_ := json.Marshal(u)
+		request,_ := http.NewRequest(http.MethodPost,fmt.Sprintf("/login"),bytes.NewBuffer(userMarshal))
+		response := httptest.NewRecorder()
+		
+		s.ServeHTTP(response,request)
+		if response.Code != http.StatusOK{
+			t.Errorf("Wrong response | Got: %v  , Want: %v",response.Code,http.StatusOK)
+		}
+		})
+}
+
+
+
+
+
+
+
+
+
+
 func TestGet(t *testing.T) {
 
 	s := Server{}
@@ -90,7 +135,5 @@ func TestDelete(t *testing.T)  {
 	response := httptest.NewRecorder()
 	
 	s.ServeHTTP(response,request)
-	
-
-	
+		
 }

@@ -9,13 +9,13 @@ import (
 
 type User struct {
 	gorm.Model
+	uuid string
 	Name string `json:"name"`
-	Age int `json:"age"`
-	Email string `gorm:"type:varchar(100);unique_index" json:"email"`
+	Username string `gorm:"type:varchar(100);unique_index" json:"Username"`
 	Password string
 }
 
-func (u *User) CreateUser() (error){
+func (u *User) CreateUser(db *gorm.DB) (error){
 
 	pass,err :=bcrypt.GenerateFromPassword([]byte(u.Password),bcrypt.DefaultCost)
 	

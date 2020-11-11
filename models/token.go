@@ -1,15 +1,12 @@
 package models
 
-import "github.com/dgrijalva/jwt-go"
 
-
-type Token struct {
-	UserID uint
-	Name   string
-	Email  string
-	*jwt.StandardClaims
-}
-
-func (t *Token)GenerateToken() {
-	
-}
+type TokenDetails struct {
+	AccessToken  string 
+	RefreshToken string
+	AccessUuid   string `json:"-"`
+	RefreshUuid  string `json:"-"`
+	AtExpires    int64	`json:"-"`
+	RtExpires    int64  `json:"-"`
+  }
+  
