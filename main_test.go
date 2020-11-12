@@ -46,7 +46,43 @@ func TestLogin(t *testing.T) {
 			t.Errorf("Wrong response | Got: %v  , Want: %v",response.Code,http.StatusOK)
 		}
 		})
-}
+
+	t.Run("Assert Auth", func(t *testing.T){
+		u := models.User{Username:"admin@admin.com.br",Password: "admin"}
+		userMarshal,_ := json.Marshal(u)
+		request,_ := http.NewRequest(http.MethodPost,fmt.Sprintf("/login"),bytes.NewBuffer(userMarshal))
+		response := httptest.NewRecorder()
+		
+		s.ServeHTTP(response,request)
+		if response.Code != http.StatusOK{
+			t.Errorf("Wrong response | Got: %v  , Want: %v",response.Code,http.StatusOK)
+		}
+		
+		newToken := &models.TokenDetails{}
+		jsonBytes,_ := ioutil.ReadAll(response.Body)
+		json.Unmarshal(jsonBytes,&newToken)
+		fmt.Println(newToken.AccessToken)
+
+		var err error
+
+		request, err = http.NewRequest(http.MethodPost,fmt.Sprintf("/checkAuth"),bytes.NewBuffer(userMarshal))
+		request.Header.Add("Authorization","Bearer "+newToken.AccessToken)
+		response = httptest.NewRecorder()
+
+		s.ServeHTTP(response,request)
+		if response.Code != http.StatusOK{
+			t.Errorf("Wrong response | Got: %v  , Want: %v",response.Code,http.StatusOK)
+		}
+		
+		if err != nil {
+			t.Errorf("Wrong response | %v ",err)
+		}
+
+
+		})
+
+
+	}
 
 
 

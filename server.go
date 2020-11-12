@@ -50,7 +50,6 @@ func (s *Server)initRedis(){
 	}
 }
 
-
 func (s *Server) initDatabase(){
 	var err error
 	
@@ -81,17 +80,30 @@ func (s *Server) initDatabase(){
 
 }
 
-
 func (s *Server)initalizeRoutes() {
 	server := new(Server)
 	router := http.NewServeMux()
 	router.Handle("/user",http.HandlerFunc(s.handleUsers))
 	router.Handle("/login",http.HandlerFunc(s.handleLogin))
 	router.Handle("/register",http.HandlerFunc(s.handleRegister))
+	router.Handle("/checkAuth",http.HandlerFunc(s.handleCheckAuth))
 	server.Handler = router
-
 	s.Handler = server
+}
 
+func(s *Server) handleCheckAuth(w http.ResponseWriter,r *http.Request){
+	tokenAuth, err := auth.ExtractTokenMetadata(r)
+
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprint(w)
+	}
+
+	var userUuid string
+	userUuid, err= auth.FetchAut(tokenAuth,s.RedisClient)
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w,userUuid)
 }
 
 

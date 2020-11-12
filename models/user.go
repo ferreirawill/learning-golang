@@ -12,6 +12,7 @@ type User struct {
 	uuid string
 	Name string `json:"name"`
 	Username string `gorm:"type:varchar(100);unique_index" json:"Username"`
+	UserType []UserType 
 	Password string
 }
 

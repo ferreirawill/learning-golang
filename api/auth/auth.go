@@ -28,3 +28,13 @@ func CreateAuth(userUuid string, jwtToken *models.TokenDetails,redisClient *redi
 	return nil
 
 }
+
+func FetchAut(authD *AccessDetails,redisClient *redis.Client)(string,error){
+	userUuid, err := redisClient.Get(authD.AccessUuid).Result()
+
+	if err != nil{
+		return "", err
+	}
+
+	return userUuid,nil
+}
